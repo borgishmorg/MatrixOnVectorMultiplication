@@ -77,13 +77,13 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu" />
-    <CudaCompile Include="main.cpp">
+    <CudaCompile Include="multiplication.cu" />
+    <CudaCompile Include="main.cu">
       <FileType>CppCode</FileType>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.h" />
+    <CudaCompile Include="multiplication.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

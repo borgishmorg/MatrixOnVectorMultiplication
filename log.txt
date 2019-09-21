@@ -1,0 +1,19 @@
+
+CPU test
+Time: 19890 us
+
+GPU test
+Time: 42798 us
+The answer is correct
+
+GPU test (with coalescing)
+Time: 4747 us
+The answer is correct
+
+GPU test (with shared memory)
+Time: 37080 us
+The answer is correct
+
+GPU test (with coalescing and shared memory)
+Time: 3990 us
+The answer is correct
