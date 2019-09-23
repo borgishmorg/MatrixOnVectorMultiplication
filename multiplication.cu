@@ -32,6 +32,8 @@ __global__ void gpu_shared_multipication(int n, int m, int* a, int* x, int* res)
 	for (int i = threadIdx.x; i < m; i += blockDim.x)
 		xx[i] = x[i];
 
+	__syncthreads();
+
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	if (i < n) {
 		res[i] = 0;
@@ -45,6 +47,8 @@ __global__ void gpu_coalescing_shared_multipication(int n, int m, int* a, int* x
 
 	for (int i = threadIdx.x; i < m; i += blockDim.x)
 		xx[i] = x[i];
+
+	__syncthreads();
 
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 	if (i < n) {
