@@ -27,33 +27,41 @@ __global__ void gpu_coalescing_multipication(int n, int m, int* a, int* x, int* 
 }
 
 __global__ void gpu_shared_multipication(int n, int m, int* a, int* x, int* res) {
-	__shared__ int xx[8192];
-	
-	for (int i = threadIdx.x; i < m; i += blockDim.x)
-		xx[i] = x[i];
+	__shared__ int xx[BLOCK_SIZE];
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-	__syncthreads();
+	if (idx < n) res[idx] = 0;
 
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	if (i < n) {
-		res[i] = 0;
-		for (int j = 0; j < m; j++)
-			res[i] += a[i * m + j] * xx[j];
+	for (int i = 0; i < m; i += blockDim.x) {
+		if(i + threadIdx.x < m)
+			xx[threadIdx.x] = x[i + threadIdx.x];
+		__syncthreads();
+
+		if (idx < n) 
+			for (int j = 0; j < blockDim.x; j++)
+				if(i + j < m)
+					res[idx] += a[idx * m + i + j] * xx[j];
+
+		__syncthreads();
 	}
 }
 
 __global__ void gpu_coalescing_shared_multipication(int n, int m, int* a, int* x, int* res) {
-	__shared__ int xx[8192];
+	__shared__ int xx[BLOCK_SIZE];
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-	for (int i = threadIdx.x; i < m; i += blockDim.x)
-		xx[i] = x[i];
+	if (idx < n) res[idx] = 0;
 
-	__syncthreads();
+	for (int i = 0; i < m; i += blockDim.x) {
+		if (i + threadIdx.x < m)
+			xx[threadIdx.x] = x[i + threadIdx.x];
+		__syncthreads();
 
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	if (i < n) {
-		res[i] = 0;
-		for (int j = 0; j < m; j++)
-			res[i] += a[i + j * n] * xx[j];
+		if (idx < n)
+			for (int j = 0; j < blockDim.x; j++)
+				if (i + j < m)
+					res[idx] += a[idx + (i + j)*n] * xx[j];
+
+		__syncthreads();
 	}
 }

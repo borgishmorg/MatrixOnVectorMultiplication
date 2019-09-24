@@ -4,8 +4,6 @@
 #include <cstdio>
 #include <chrono>
 
-#define BLOCK_SIZE 512
-
 int* generate(int n) {
 	int* res = new int[n];
 	for (int i = 0; i < n; i++)
