@@ -38,8 +38,7 @@ __global__ void gpu_shared_multipication(int n, int m, int* a, int* x, int* res)
 		__syncthreads();
 
 		if (idx < n) 
-			for (int j = 0; j < blockDim.x; j++)
-				if(i + j < m)
+			for (int j = 0; j < blockDim.x && i + j < m; j++)
 					res[idx] += a[idx * m + i + j] * xx[j];
 
 		__syncthreads();
@@ -58,8 +57,7 @@ __global__ void gpu_coalescing_shared_multipication(int n, int m, int* a, int* x
 		__syncthreads();
 
 		if (idx < n)
-			for (int j = 0; j < blockDim.x; j++)
-				if (i + j < m)
+			for (int j = 0; j < blockDim.x && i + j < m; j++)
 					res[idx] += a[idx + (i + j)*n] * xx[j];
 
 		__syncthreads();
